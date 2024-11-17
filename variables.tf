@@ -28,24 +28,6 @@ variable "data_directory" {
   description = "Where data will be persisted (volumes will be mounted as sub-directories)."
 }
 
-# Database -----------------------------------------------------------------------------------------
-
-variable "name" {
-  type        = string
-  description = "Database name"
-}
-
-# Authentication -----------------------------------------------------------------------------------
-
-variable "user" {
-  type = string
-}
-
-variable "password" {
-  type      = string
-  sensitive = true
-}
-
 # Networking ---------------------------------------------------------------------------------------
 
 variable "hosts" {

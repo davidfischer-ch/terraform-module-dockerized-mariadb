@@ -14,9 +14,6 @@ resource "docker_container" "server" {
 
   env = [
     "MARIADB_AUTO_UPGRADE=true",
-    "MARIADB_DATABASE=${var.name}",
-    "MARIADB_USER=${var.user}",
-    "MARIADB_PASSWORD=${var.password}",
     "MARIADB_ROOT_PASSWORD=${random_password.root_password.result}"
   ]
 
