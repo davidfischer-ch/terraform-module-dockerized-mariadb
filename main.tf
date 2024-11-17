@@ -13,6 +13,7 @@ resource "docker_container" "server" {
   # shm_size = 256 # MB
 
   env = [
+    "MARIADB_AUTO_UPGRADE=true",
     "MARIADB_DATABASE=${var.name}",
     "MARIADB_USER=${var.user}",
     "MARIADB_PASSWORD=${var.password}",
