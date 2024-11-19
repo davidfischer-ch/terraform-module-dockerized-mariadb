@@ -28,6 +28,13 @@ variable "data_directory" {
   description = "Where data will be persisted (volumes will be mounted as sub-directories)."
 }
 
+variable "root_password" {
+  type        = string
+  default     = ""
+  description = "Define root password (if empty, then generated)."
+  sensitive   = true
+}
+
 # Networking ---------------------------------------------------------------------------------------
 
 variable "hosts" {
