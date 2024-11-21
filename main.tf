@@ -31,6 +31,7 @@ resource "docker_container" "server" {
     name = var.network_id
   }
 
+  # Data
   volumes {
     container_path = local.container_data_directory
     host_path      = local.host_data_directory
