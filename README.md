@@ -9,6 +9,8 @@ Manage MariaDB server.
 
 ## Usage
 
+See [examples/default](examples/default) for a complete working configuration.
+
 ```hcl
 module "database" {
   source = "git::https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb.git?ref=1.0.2"
