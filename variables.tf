@@ -1,6 +1,7 @@
 variable "identifier" {
   type        = string
   description = "Identifier (must be unique, used to name resources)."
+
   validation {
     condition     = regex("^[a-z]+(-[a-z0-9]+)*$", var.identifier) != null
     error_message = "Argument `identifier` must match regex ^[a-z]+(-[a-z0-9]+)*$."
@@ -9,14 +10,14 @@ variable "identifier" {
 
 variable "enabled" {
   type        = bool
-  default     = true
   description = "Toggle the containers (started or stopped)."
+  default     = true
 }
 
 variable "wait" {
   type        = bool
-  default     = true
   description = "Wait for the container to reach an healthy state after creation."
+  default     = true
 }
 
 variable "image_id" {
@@ -28,32 +29,32 @@ variable "image_id" {
 
 variable "app_uid" {
   type        = number
-  default     = 999
   description = "UID of the user running the container and owning the data directories."
+  default     = 999
 }
 
 variable "app_gid" {
   type        = number
-  default     = 999
   description = "GID of the user running the container and owning the data directories."
+  default     = 999
 }
 
 variable "privileged" {
   type        = bool
-  default     = false
   description = "Run the container in privileged mode."
+  default     = false
 }
 
 variable "cap_add" {
   type        = set(string)
-  default     = []
   description = "Linux capabilities to add to the container."
+  default     = []
 }
 
 variable "cap_drop" {
   type        = set(string)
-  default     = []
   description = "Linux capabilities to drop from the container."
+  default     = []
 }
 
 # Storage ------------------------------------------------------------------------------------------
@@ -65,8 +66,8 @@ variable "data_directory" {
 
 variable "root_password" {
   type        = string
-  default     = ""
   description = "Define root password (if empty, then generated)."
+  default     = ""
   sensitive   = true
 }
 
@@ -74,8 +75,8 @@ variable "root_password" {
 
 variable "hosts" {
   type        = map(string)
-  default     = {}
   description = "Add entries to container hosts file."
+  default     = {}
 }
 
 variable "network_id" {
@@ -84,8 +85,9 @@ variable "network_id" {
 }
 
 variable "port" {
-  type    = number
-  default = 3306
+  type        = number
+  description = "Bind the MariaDB port."
+  default     = 3306
 
   validation {
     condition     = var.port == 3306

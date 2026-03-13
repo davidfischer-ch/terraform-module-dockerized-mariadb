@@ -1,12 +1,15 @@
 output "host" {
-  value = docker_container.server.hostname
+  description = "Hostname of the MariaDB container."
+  value       = docker_container.server.hostname
 }
 
 output "port" {
-  value = var.port
+  description = "Port bound by MariaDB."
+  value       = var.port
 }
 
 output "root_password" {
-  value     = random_password.root_password.result
-  sensitive = true
+  description = "Generated MariaDB root password."
+  sensitive   = true
+  value       = random_password.root_password.result
 }
