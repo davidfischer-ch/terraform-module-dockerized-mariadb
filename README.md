@@ -46,11 +46,11 @@ data_directory/
 | `privileged` | `bool` | `false` | Run the container in privileged mode. |
 | `cap_add` | `set(string)` | `[]` | Linux capabilities to add to the container. |
 | `cap_drop` | `set(string)` | `[]` | Linux capabilities to drop from the container. |
-| `data_directory` | `string` | — | Host path for persistent volumes. |
-| `root_password` | `string` | `""` | Root password (auto-generated if empty, sensitive). |
 | `hosts` | `map(string)` | `{}` | Extra `/etc/hosts` entries for the container. |
 | `network_id` | `string` | — | Docker network to attach to. |
 | `port` | `number` | `3306` | MariaDB port (changing not yet implemented). |
+| `data_directory` | `string` | — | Host path for persistent volumes. |
+| `root_password` | `string` | `""` | Root password (auto-generated if empty, sensitive). |
 
 ## Outputs
 

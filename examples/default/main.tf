@@ -16,10 +16,18 @@ resource "random_password" "mariadb_root" {
 module "database" {
   source = "git::https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb.git?ref=1.1.0"
 
-  identifier     = "my-app-database"
-  image_id       = docker_image.mariadb.image_id
+  identifier = "my-app-database"
+  image_id   = docker_image.mariadb.image_id
+
+  # Networking
+
+  network_id = docker_network.app.id
+
+  # Storage
+
   data_directory = "/data/my-app/database"
 
-  network_id    = docker_network.app.id
+  # Authentication
+
   root_password = random_password.mariadb_root.result
 }
