@@ -14,7 +14,7 @@ resource "random_password" "mariadb_root" {
 }
 
 module "database" {
-  source = "git::https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb.git?ref=1.1.0"
+  source = "git::https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb.git?ref=1.2.0"
 
   identifier = "my-app-database"
   image_id   = docker_image.mariadb.image_id

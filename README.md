@@ -13,14 +13,19 @@ See [examples/default](examples/default) for a complete working configuration.
 
 ```hcl
 module "database" {
-  source = "git::https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb.git?ref=1.1.1"
+  source = "git::https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb.git?ref=1.2.0"
 
-  identifier     = "my-app-database"
-  image_id       = docker_image.mariadb.image_id
-  data_directory = "/data/my-app/database"
+  identifier = "my-app-database"
+  image_id   = docker_image.mariadb.image_id
+
+  # Networking
 
   hosts      = { "myserver" = "10.0.0.1" }
   network_id = docker_network.app.id
+
+  # Storage
+
+  data_directory = "/data/my-app/database"
 }
 ```
 
