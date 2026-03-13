@@ -10,6 +10,14 @@ resource "docker_container" "server" {
   restart  = "always"
   wait     = var.wait
 
+  healthcheck {
+    test         = ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P ${var.port} --silent"]
+    interval     = "10s"
+    timeout      = "5s"
+    retries      = 3
+    start_period = "5m"
+  }
+
   privileged = var.privileged
 
   dynamic "capabilities" {
