@@ -1,5 +1,17 @@
 # Changelog
 
+## Release v1.1.1 (2026-03-13)
+
+### Features
+
+* Add Docker healthcheck using `mysqladmin ping` on `var.port` (start period: 5 minutes)
+
+### Fix and enhancements
+
+* Set `enabled` and `wait` defaults to `true`
+* Refine variable descriptions, validators, and attribute ordering
+* Remove redundant default values from examples and README
+
 ## Release v1.1.0 (2026-03-13)
 
 ### Breaking changes
