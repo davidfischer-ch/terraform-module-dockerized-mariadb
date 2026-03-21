@@ -59,9 +59,5 @@ resource "docker_container" "server" {
     read_only      = false
   }
 
-  provisioner "local-exec" {
-    command = <<EOT
-      chown "${var.app_uid}:${var.app_gid}" "${local.host_data_directory}"
-    EOT
-  }
+  depends_on = [terraform_data.data_directories]
 }
