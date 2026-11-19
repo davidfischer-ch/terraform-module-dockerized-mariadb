@@ -51,8 +51,8 @@ data_directory/
 | `app_uid` | `number` | `999` | UID of the user running the container and owning the data directories. |
 | `app_gid` | `number` | `999` | GID of the user running the container and owning the data directories. |
 | `privileged` | `bool` | `false` | Run the container in privileged mode. |
-| `cap_add` | `set(string)` | `[]` | Linux capabilities to add to the container. |
-| `cap_drop` | `set(string)` | `[]` | Linux capabilities to drop from the container. |
+| `cap_add` | `set(string)` | `[]` | Linux capabilities to add to the container, `ALL` for every one. |
+| `cap_drop` | `set(string)` | `[]` | Linux capabilities to drop from the container, `ALL` for every one. |
 | `hosts` | `map(string)` | `{}` | Extra `/etc/hosts` entries for the container. |
 | `network_id` | `string` | — | Docker network to attach to. |
 | `port` | `number` | `3306` | MariaDB port (changing not yet implemented). |
