@@ -11,7 +11,7 @@ resource "docker_container" "server" {
   wait     = var.wait
 
   healthcheck {
-    test         = ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P ${var.port} --silent"]
+    test         = ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
     interval     = "10s"
     timeout      = "5s"
     retries      = 3

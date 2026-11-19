@@ -6,6 +6,8 @@ Manage MariaDB server.
 * Persists data directory
 * Generates a random root password if not provided
 * Automatic schema upgrades enabled (`MARIADB_AUTO_UPGRADE`)
+* Healthcheck through the image's `healthcheck.sh`
+
 
 ## Usage
 
@@ -74,6 +76,33 @@ data_directory/
 * Terraform >= 1.17
 * [kreuzwerker/docker](https://github.com/kreuzwerker/terraform-provider-docker) >= 4.7.0
 * [hashicorp/random](https://github.com/hashicorp/terraform-provider-random) >= 3.6.0
+
+
+## Tests
+
+```bash
+terraform init -backend=false
+terraform test
+```
+
+`terraform test` needs Terraform >= 1.17, the module's own floor. The tests plan against mocked
+providers: they assert the healthcheck command, the root password the server is initialised with,
+the capabilities passed to Docker and the outputs, and cover neither the image's `healthcheck.sh`
+nor the data directory provisioner, which they do not run. They run on every push, in the GitHub
+workflow (with the newest providers and with their minimums) and in the GitLab pipeline.
+
+`tests/e2e/run.sh` applies the module against a real Docker daemon, checks the healthcheck, the root
+password, the owner of the data directory and that the data outlives a replaced container, then
+destroys everything. The GitHub workflow and the GitLab pipeline run it on MariaDB 11.8 and 11.5;
+locally, as root:
+
+```bash
+E2E_IMAGE=mariadb:11.8.5 sh tests/e2e/run.sh
+```
+
+The Docker daemon must see the data directory at the same path: set `E2E_DATA_DIRECTORY` to a
+directory on a filesystem both share when Terraform runs in a container of its own.
+
 
 ## References
 
