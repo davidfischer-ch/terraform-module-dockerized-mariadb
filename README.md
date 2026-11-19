@@ -29,6 +29,7 @@ module "database" {
 }
 ```
 
+
 ## Data layout
 
 All persistent data lives under `data_directory`:
@@ -37,6 +38,7 @@ All persistent data lives under `data_directory`:
 data_directory/
 └── data/  # MariaDB data files (/var/lib/mysql)
 ```
+
 
 ## Variables
 
@@ -57,6 +59,7 @@ data_directory/
 | `data_directory` | `string` | — | Host path for persistent volumes. |
 | `root_password` | `string` | `""` | Root password (auto-generated if empty, sensitive). |
 
+
 ## Outputs
 
 | Name | Description |
@@ -64,6 +67,7 @@ data_directory/
 | `host` | Container hostname. |
 | `port` | MariaDB port. |
 | `root_password` | Root password (sensitive). |
+
 
 ## Requirements
 
