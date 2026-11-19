@@ -7,6 +7,7 @@ Manage MariaDB server.
 * Generates a random root password if not provided
 * Automatic schema upgrades enabled (`MARIADB_AUTO_UPGRADE`)
 * Healthcheck through the image's `healthcheck.sh`
+* Files of the `FILE` privilege confined to the container's `/tmp` (`secure_file_priv`)
 
 
 ## Usage
@@ -59,6 +60,7 @@ data_directory/
 | `network_id` | `string` | — | Docker network to attach to. |
 | `port` | `number` | `3306` | MariaDB port (changing not yet implemented). |
 | `data_directory` | `string` | — | Host path for persistent volumes. |
+| `secure_file_priv` | `string` | `"/tmp"` | Directory of the container the FILE statements read and write in; `null` lifts the limit, which lets a FILE account plant a dump in `/backup`. |
 | `root_password` | `string` | `""` | Root password (auto-generated if empty, sensitive). |
 
 

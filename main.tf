@@ -3,7 +3,10 @@ resource "docker_container" "server" {
   image = var.image_id
   name  = var.identifier
 
-  # command = []
+  command = compact([
+    "mariadbd",
+    var.secure_file_priv == null ? "" : "--secure-file-priv=${var.secure_file_priv}",
+  ])
 
   must_run = var.enabled
   start    = var.enabled

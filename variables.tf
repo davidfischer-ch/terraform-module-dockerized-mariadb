@@ -96,6 +96,22 @@ variable "data_directory" {
   description = "Where data will be persisted (volumes will be mounted as sub-directories)."
 }
 
+variable "secure_file_priv" {
+  type        = string
+  description = <<-EOT
+    Directory of the container the statements of the FILE privilege (`SELECT ... INTO OUTFILE`,
+    `LOAD DATA INFILE`) read and write in, out of the data and backup directories. `null` lifts the
+    limit, and a FILE account can then plant a dump the restore action loads as root.
+  EOT
+  default     = "/tmp"
+  nullable    = true
+
+  validation {
+    condition     = var.secure_file_priv == null || startswith(var.secure_file_priv, "/")
+    error_message = "Argument `secure_file_priv` must be an absolute path, or null."
+  }
+}
+
 # Authentication -----------------------------------------------------------------------------------
 
 variable "root_password" {
