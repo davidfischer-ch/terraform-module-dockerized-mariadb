@@ -9,7 +9,7 @@ output "port" {
 }
 
 output "root_password" {
-  description = "Generated MariaDB root password."
+  description = "MariaDB root password (the given one, or the generated one)."
   sensitive   = true
-  value       = random_password.root_password.result
+  value       = local.root_password
 }

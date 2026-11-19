@@ -34,7 +34,7 @@ resource "docker_container" "server" {
 
   env = [
     "MARIADB_AUTO_UPGRADE=true",
-    "MARIADB_ROOT_PASSWORD=${random_password.root_password.result}"
+    "MARIADB_ROOT_PASSWORD=${local.root_password}"
   ]
 
   dynamic "host" {
