@@ -3,6 +3,9 @@ locals {
 
   host_data_directory = "${var.data_directory}/data"
 
+  # The path as one single-quoted shell word, whatever characters it holds.
+  host_data_directory_quoted = "'${replace(local.host_data_directory, "'", "'\\''")}'"
+
   root_password = coalesce(var.root_password, random_password.root_password.result)
 
   linux_capabilities = [
