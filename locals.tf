@@ -1,10 +1,19 @@
 locals {
-  container_data_directory = "/var/lib/mysql"
+  container_backup_directory = "/backup"
+  container_data_directory   = "/var/lib/mysql"
 
-  host_data_directory = "${var.data_directory}/data"
+  host_backup_directory = "${var.data_directory}/backup"
+  host_data_directory   = "${var.data_directory}/data"
 
-  # The path as one single-quoted shell word, whatever characters it holds.
-  host_data_directory_quoted = "'${replace(local.host_data_directory, "'", "'\\''")}'"
+  # The paths as single-quoted shell words, whatever characters they hold.
+  host_backup_directory_quoted = "'${replace(local.host_backup_directory, "'", "'\\''")}'"
+  host_directories_quoted = join(" ", [
+    for directory in [local.host_backup_directory, local.host_data_directory] :
+    "'${replace(directory, "'", "'\\''")}'"
+  ])
+
+  # Prefix of an action's shell command, running a client as root.
+  as_root = "MYSQL_PWD=\"$MARIADB_ROOT_PASSWORD\" exec"
 
   root_password = coalesce(var.root_password, random_password.root_password.result)
 

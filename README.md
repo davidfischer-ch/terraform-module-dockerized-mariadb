@@ -39,7 +39,8 @@ All persistent data lives under `data_directory`:
 
 ```
 data_directory/
-└── data/  # MariaDB data files (/var/lib/mysql)
+├── backup/  # Dumps written by the backup action (/backup)
+└── data/    # MariaDB data files (/var/lib/mysql)
 ```
 
 
@@ -94,9 +95,9 @@ nor the data directory provisioner, which they do not run. They run on every pus
 workflow (with the newest providers and with their minimums) and in the GitLab pipeline.
 
 `tests/e2e/run.sh` applies the module against a real Docker daemon, checks the healthcheck, the root
-password, the owner of the data directory and that the data outlives a replaced container, then
-destroys everything. The GitHub workflow and the GitLab pipeline run it on MariaDB 11.8 and 11.5;
-locally, as root:
+password, the owner of the data directory and that the data outlives a replaced container, runs
+every action on real data, then destroys everything. The GitHub workflow and the GitLab pipeline run
+it on MariaDB 11.8 and 11.5; locally, as root:
 
 ```bash
 E2E_IMAGE=mariadb:11.8.5 sh tests/e2e/run.sh
@@ -104,6 +105,42 @@ E2E_IMAGE=mariadb:11.8.5 sh tests/e2e/run.sh
 
 The Docker daemon must see the data directory at the same path: set `E2E_DATA_DIRECTORY` to a
 directory on a filesystem both share when Terraform runs in a container of its own.
+
+
+## Actions
+
+On-demand operations on the server. Each runs only when invoked, never during an ordinary `apply`,
+and leaves nothing in the state:
+
+```bash
+terraform apply -invoke='module.database.action.docker_exec.<action>'
+```
+
+Replace `module.database` with the module's address. Each runs as `app_uid:app_gid` and
+authenticates as root with the password of the container's environment.
+
+### Backup
+
+Both work in `{data_directory}/backup`.
+
+| Action | What it does | When |
+|--------|--------------|------|
+| `backup` | `mariadb-dump` of every database, then of the accounts but the image's own (`root`, `healthcheck`, `mariadb.sys`) with their grants, into `dump-<UTC time>.sql.tmp`, readable by `app_uid` alone, renamed `dump-<UTC time>.sql` once complete; the older dumps removed only then | Before an upgrade or a risky change, or on a schedule |
+| `restore` | The newest complete dump loaded: its databases dropped and created again, its missing accounts created and its grants given, the existing accounts keeping their passwords | To roll the databases back to the last dump |
+
+One dump is kept. To bring an older one back, restore it with restic into `{data_directory}/backup`
+as the newest `dump-*.sql`, then invoke `restore`. A restore is not atomic: a failure, a row the
+server rejects included, leaves the databases loaded up to the failing statement.
+
+### Maintenance
+
+| Action | What it does | When |
+|--------|--------------|------|
+| `check` | `mariadb-check --check`: every table of every database checked for corruption, failing when the report holds an error | After a crash, a disk error or a host change |
+| `analyze` | `mariadb-check --analyze`: the key distribution statistics of every table | After a restore or a large load |
+| `upgrade` | `mariadb-upgrade`: the system tables brought to the server's version | When the upgrade at start failed |
+
+`MARIADB_AUTO_UPGRADE=true` already runs the upgrade when the container starts on a newer image.
 
 
 ## References

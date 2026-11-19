@@ -57,6 +57,12 @@ resource "docker_container" "server" {
   network_mode = "bridge"
 
   volumes {
+    container_path = local.container_backup_directory
+    host_path      = local.host_backup_directory
+    read_only      = false
+  }
+
+  volumes {
     container_path = local.container_data_directory
     host_path      = local.host_data_directory
     read_only      = false
