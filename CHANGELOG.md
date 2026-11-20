@@ -1,6 +1,33 @@
 # Changelog
 
 
+## Release v1.3.1 (2026-11-20)
+
+Diff: https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb/compare/1.3.0...1.3.1
+
+### Fix and enhancements
+
+Server:
+
+* Pass the root password through `{data_directory}/secrets/root-password`, mounted read-only, instead of the container's environment
+    * The file is written from a provisioner's environment: no digest of the password in the plan, the output or the state, which holds the password under a sensitive mark only
+    * The next apply restores its mode (`0700` directory, `0600` file) and owner (`app_uid`) after a drift without replacing the container, and destroy removes it
+    * The container is replaced once on upgrade, and at each password change
+* Refuse a `root_password` ending in a newline
+
+Actions:
+
+* Read the root password from the mounted file
+
+Requirements:
+
+* Require the external provider 2.3.0
+
+CI:
+
+* Test at both ends of `versions.tf`, every version read from it at run time: the newest Terraform and providers, and their floors
+
+
 ## Release v1.3.0 (2026-11-19)
 
 Diff: https://github.com/davidfischer-ch/terraform-module-dockerized-mariadb/compare/1.2.0...1.3.0
