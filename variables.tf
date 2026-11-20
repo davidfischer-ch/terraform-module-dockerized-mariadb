@@ -119,4 +119,11 @@ variable "root_password" {
   description = "Define root password (if empty, then generated)."
   default     = ""
   sensitive   = true
+
+  # The entrypoint and the actions read the password file through a command substitution, which
+  # drops trailing line feeds; a trailing carriage return is the rest of a CRLF line ending.
+  validation {
+    condition     = !endswith(var.root_password, "\n") && !endswith(var.root_password, "\r")
+    error_message = "Argument `root_password` must not end with a line feed or a carriage return."
+  }
 }

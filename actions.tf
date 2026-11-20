@@ -1,5 +1,5 @@
 # On-demand operations on the server, run with `terraform apply -invoke=<action address>`.
-# Each authenticates as root with the password of the container's environment.
+# Each authenticates as root with the password file the container mounts.
 
 # Backup -------------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ action "docker_exec" "backup" {
     command = ["sh", "-c", <<-EOT
       set -eu
       umask 077
-      export MYSQL_PWD="$MARIADB_ROOT_PASSWORD"
+      export MYSQL_PWD="$(cat "$MARIADB_ROOT_PASSWORD_FILE")"
       cd '${local.container_backup_directory}'
       dump="dump-$(date -u +%Y%m%dT%H%M%SZ).sql"
       databases=$(mariadb -u root -N -B -r -e "SELECT schema_name FROM information_schema.schemata
@@ -63,7 +63,7 @@ action "docker_exec" "restore" {
     user      = "${var.app_uid}:${var.app_gid}"
     command = ["sh", "-c", <<-EOT
       set -eu
-      export MYSQL_PWD="$MARIADB_ROOT_PASSWORD"
+      export MYSQL_PWD="$(cat "$MARIADB_ROOT_PASSWORD_FILE")"
       cd '${local.container_backup_directory}'
       dump=
       for complete in dump-*.sql; do
@@ -89,7 +89,7 @@ action "docker_exec" "check" {
     user      = "${var.app_uid}:${var.app_gid}"
     command = ["sh", "-c", <<-EOT
       set -eu
-      export MYSQL_PWD="$MARIADB_ROOT_PASSWORD"
+      export MYSQL_PWD="$(cat "$MARIADB_ROOT_PASSWORD_FILE")"
       report=$(mariadb-check -u root --all-databases --check)
       printf '%s\n' "$report"
       case "$report" in

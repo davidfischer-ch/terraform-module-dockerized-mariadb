@@ -37,7 +37,7 @@ resource "docker_container" "server" {
 
   env = [
     "MARIADB_AUTO_UPGRADE=true",
-    "MARIADB_ROOT_PASSWORD=${local.root_password}"
+    "MARIADB_ROOT_PASSWORD_FILE=${local.container_root_password}",
   ]
 
   dynamic "host" {
@@ -68,5 +68,17 @@ resource "docker_container" "server" {
     read_only      = false
   }
 
-  depends_on = [terraform_data.data_directories]
+  volumes {
+    container_path = local.container_root_password
+    host_path      = local.host_root_password_file
+    read_only      = true
+  }
+
+  depends_on = [terraform_data.data_directories, terraform_data.root_password]
+
+  # The password file is bound by its inode, which each write replaces: a new container binds the
+  # new one.
+  lifecycle {
+    replace_triggered_by = [terraform_data.root_password]
+  }
 }

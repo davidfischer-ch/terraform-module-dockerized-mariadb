@@ -21,6 +21,11 @@ variable "image" {
   type = string
 }
 
+variable "root_password" {
+  type      = string
+  sensitive = true
+}
+
 resource "docker_image" "mariadb" {
   name         = var.image
   keep_locally = true
@@ -39,5 +44,5 @@ module "mariadb" {
   app_uid        = var.app_uid
   app_gid        = var.app_uid
   data_directory = var.data_directory
-  root_password  = "an-e2e-password"
+  root_password  = var.root_password
 }

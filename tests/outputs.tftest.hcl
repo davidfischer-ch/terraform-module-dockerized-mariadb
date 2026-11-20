@@ -1,4 +1,7 @@
 mock_provider "docker" {}
+mock_provider "external" {
+  source = "./tests/mocks"
+}
 mock_provider "random" {}
 
 variables {
